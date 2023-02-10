@@ -1,25 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from "react";
+import { BrowserRouter, Routes, Route, } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
+import Home from './home';
+import Blog from './blog';
+import About from './about';
+import Product from './product';
+import Header from "./component/Layout/Header";
+import { ProtectedRoute, AuthCheckRoute } from "./component/Routes/ProtectedRoute";
+import Login from "./login";
+import SignIn from "./signIn";
+import { useDispatch } from 'react-redux';
+import { authTokenCheck } from "./state/Action/AuthAction";
 
-function App() {
+const App = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(authTokenCheck());
+  }, [])
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <BrowserRouter>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/login" element={<AuthCheckRoute><Login /></AuthCheckRoute>} />
+          <Route path="/signIn" element={<AuthCheckRoute><SignIn /></AuthCheckRoute>} />
+          <Route path="/product" element={<ProtectedRoute><Product /></ProtectedRoute>} />
+        </Routes>
+      </BrowserRouter>
+    </>
   );
-}
+};
 
 export default App;
